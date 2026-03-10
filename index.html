@@ -40,6 +40,36 @@
         border-bottom: 1px solid var(--border);
         margin-bottom: 16px;
       }
+      .topbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+      }
+      .lang-switcher {
+        display: inline-flex;
+        gap: 6px;
+        padding: 4px;
+        background: var(--paper);
+        border: 1px solid var(--border);
+      }
+      .lang-button {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        padding: 6px 10px;
+        font:
+          700 11px/1 "Avenir Next",
+          "PingFang SC",
+          "Microsoft YaHei",
+          sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+      .lang-button.is-active {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
       .eyebrow {
         margin-bottom: 8px;
         color: var(--accent);
@@ -157,25 +187,31 @@
   </head>
   <body>
     <main class="page">
+      <div class="topbar">
+        <div class="lang-switcher" aria-label="Language switcher">
+          <button class="lang-button is-active" type="button" data-lang-button="zh">中文</button>
+          <button class="lang-button" type="button" data-lang-button="en">EN</button>
+        </div>
+      </div>
       <section class="shero">
         <div class="eyebrow">Women Stack Daily</div>
         <h1>Women Stack Daily</h1>
-        <div class="subtitle">面向科技从业者的每日技术与行业快报</div>
+        <div class="subtitle" data-i18n="subtitle">面向科技从业者的每日技术与行业快报</div>
         <div class="meta-row">
-          <span>最新更新：2026-03-10</span>
-          <span><a href="./daily/2026-03-10.html">打开独立页面</a></span>
+          <span><span data-i18n="latestUpdated">最新更新</span>：2026-03-10</span>
+          <span><a href="./daily/2026-03-10.html" data-i18n="openLatest">打开独立页面</a></span>
         </div>
       </section>
 
       <section class="layout">
         <section class="panel">
-          <h2>最新一期</h2>
+          <h2 data-i18n="latestIssue">最新一期</h2>
           <div class="latest-frame">          <iframe class="latest-frame" src="./daily/2026-03-10.html" title="Women Stack Daily 2026-03-10" loading="lazy"></iframe></div>
         </section>
 
         <section class="panel">
-          <h2>最近几天</h2>
-          <p class="panel-note">保留最近几期入口，方便回看和补读。</p>
+          <h2 data-i18n="recentDays">最近几天</h2>
+          <p class="panel-note" data-i18n="recentNote">保留最近几期入口，方便回看和补读。</p>
           <div class="recent-list">          <div class="recent-item">
             <span class="recent-date">2026-03-10</span>
             <a class="recent-title" href="./daily/2026-03-10.html">Women Stack Daily · 2026-03-10</a>
@@ -191,7 +227,68 @@
         </section>
       </section>
 
-      <footer class="footer">Generated from the Women Stack workflow</footer>
+      <footer class="footer" data-i18n="footer">Generated from the Women Stack workflow</footer>
     </main>
+    <script>
+      const translations = {
+        zh: {
+          subtitle: "面向科技从业者的每日技术与行业快报",
+          latestUpdated: "最新更新",
+          openLatest: "打开独立页面",
+          latestIssue: "最新一期",
+          recentDays: "最近几天",
+          recentNote: "保留最近几期入口，方便回看和补读。",
+          footer: "Generated from the Women Stack workflow"
+        },
+        en: {
+          subtitle: "A daily briefing on technology and industry updates.",
+          latestUpdated: "Latest update",
+          openLatest: "Open latest page",
+          latestIssue: "Latest Issue",
+          recentDays: "Recent Days",
+          recentNote: "Browse the most recent issues for quick catch-up and revisit.",
+          footer: "Generated from the Women Stack workflow"
+        }
+      };
+
+      const i18nNodes = document.querySelectorAll("[data-i18n]");
+      const langButtons = document.querySelectorAll("[data-lang-button]");
+      const latestFrame = document.querySelector("iframe.latest-frame");
+
+      function syncIframeLanguage(lang) {
+        if (!latestFrame || !latestFrame.contentWindow) {
+          return;
+        }
+        latestFrame.contentWindow.postMessage({ type: "wsd-set-language", language: lang }, "*");
+      }
+
+      function applyLanguage(lang) {
+        const locale = translations[lang] ? lang : "zh";
+        document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
+        i18nNodes.forEach((node) => {
+          const key = node.dataset.i18n;
+          node.textContent = translations[locale][key];
+        });
+        langButtons.forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.langButton === locale);
+        });
+        window.localStorage.setItem("wsd-lang", locale);
+        syncIframeLanguage(locale);
+      }
+
+      if (latestFrame) {
+        latestFrame.addEventListener("load", () => {
+          const savedLang = window.localStorage.getItem("wsd-lang") || "zh";
+          syncIframeLanguage(savedLang);
+        });
+      }
+
+      const savedLang = window.localStorage.getItem("wsd-lang");
+      applyLanguage(savedLang || "zh");
+
+      langButtons.forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.langButton));
+      });
+    </script>
   </body>
 </html>
