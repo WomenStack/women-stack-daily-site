@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Women Stack Daily</title>
+  <style>
+    :root {
+      --bg: #f8f5ef;
+      --paper: #fffdf9;
+      --border: #eadfd2;
+      --title: #1f2937;
+      --text: #374151;
+      --muted: #6b7280;
+      --accent: #c2410c;
+      --accent-soft: #fff1e8;
+      --rule: #ddd6ce;
+      --tag-bg: #fff4ec;
+      --tag-border: #efc3a7;
+      --sticky-top: 0px;
+      --sticky-z: 20;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Georgia", "Noto Serif SC", "Songti SC", serif;
+      background: var(--bg);
+      color: var(--text);
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #d8a98b rgba(194, 65, 12, 0.08);
+    }
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(180deg, rgba(194, 65, 12, 0.05), rgba(234, 223, 210, 0.65));
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #d9a17f, #c2410c);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 253, 249, 0.95);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #cf865f, #9a3412);
+    }
+    .page {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 16px 20px 48px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .topbar-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--accent);
+      border-radius: 10px;
+      font: 700 11px/1 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+    .topbar-home-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(194, 65, 12, 0.28);
+      background: var(--accent-soft);
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .topbar-icon-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      color: var(--accent);
+      border-radius: 10px;
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 8px 12px;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+    .topbar-icon-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(194, 65, 12, 0.28);
+      background: var(--accent-soft);
+    }
+    .topbar-icon-link svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+    .hero {
+      padding: 12px 0 16px;
+      margin-bottom: 12px;
+    }
+    .page.is-embedded .topbar {
+      display: none;
+    }
+    .page.is-embedded .language-switch {
+      display: none !important;
+    }
+    .page.is-embedded .hero-title,
+    .page.is-embedded .eyebrow {
+      display: none;
+    }
+    .page.is-embedded .subtitle,
+    .page.is-embedded .meta-date {
+      display: none;
+    }
+    .page.is-embedded .hero {
+      padding: 0;
+      margin-bottom: 4px;
+    }
+    .eyebrow {
+      font: 700 11px/1.2 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 7vw, 38px);
+      line-height: 1.02;
+      color: var(--title);
+    }
+    .subtitle {
+      margin-top: 8px;
+      font: 500 12px/1.6 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--muted);
+    }
+    .language-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      border-radius: 10px;
+    }
+    .lang-toggle {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: 700 11px/1 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      padding: 8px 12px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 8px;
+      transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
+    }
+    .lang-toggle:hover {
+      transform: translateY(-1px);
+      background: rgba(194, 65, 12, 0.06);
+    }
+    .lang-toggle.is-active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .meta-date {
+      margin-top: 12px;
+      font: 600 12px/1.2 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--title);
+    }
+    .section-nav {
+      position: sticky;
+      top: var(--sticky-top);
+      z-index: var(--sticky-z);
+      margin: 16px 0 0;
+      padding: 10px 0 12px;
+      background: linear-gradient(180deg, rgba(248, 245, 239, 0.96), rgba(248, 245, 239, 0.92));
+      border-bottom: 1px solid rgba(221, 214, 206, 0.68);
+    }
+    .page.is-embedded .section-nav {
+      margin-top: 0;
+      padding-top: 6px;
+      padding-bottom: 10px;
+    }
+    .section-nav-inner {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .section-nav-inner::-webkit-scrollbar {
+      display: none;
+    }
+    .counts {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      min-width: max-content;
+      margin: 0;
+      padding-bottom: 2px;
+    }
+    .count-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 253, 249, 0.7);
+      font: 600 11px/1.2 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--muted);
+      border-radius: 999px;
+    }
+    .count-pill:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--tag-border);
+    }
+    .lang-inline,
+    .lang-block {
+      display: none !important;
+    }
+    .page[data-language="zh"] [data-lang="en"] {
+      display: none !important;
+    }
+    .page[data-language="en"] [data-lang="zh"] {
+      display: none !important;
+    }
+    .page[data-language="zh"] .lang-inline[data-lang="zh"] {
+      display: inline !important;
+    }
+    .page[data-language="en"] .lang-inline[data-lang="en"] {
+      display: inline !important;
+    }
+    .page[data-language="zh"] .lang-block[data-lang="zh"] {
+      display: block !important;
+    }
+    .page[data-language="en"] .lang-block[data-lang="en"] {
+      display: block !important;
+    }
+    .reader-section {
+      scroll-margin-top: calc(var(--sticky-top) + 84px);
+    }
+    .section-items {
+      display: grid;
+      gap: 0;
+    }
+    .section-title {
+      margin: 32px 0 20px;
+      padding-bottom: 0;
+      font: 700 18px/1.25 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--title);
+    }
+    .reader-item {
+      max-width: 720px;
+      padding: 0 0 24px;
+      border-bottom: 1px solid rgba(221, 214, 206, 0.92);
+      background: transparent;
+      transition: border-color 160ms ease;
+    }
+    .reader-item + .reader-item {
+      padding-top: 24px;
+    }
+    .reader-item:hover {
+      border-color: rgba(194, 65, 12, 0.18);
+    }
+    .ai-builder-digest {
+      display: grid;
+      gap: 28px;
+    }
+    .ai-builder-group {
+      display: grid;
+      gap: 10px;
+    }
+    .ai-builder-group-title {
+      margin: 0;
+      font: 800 16px/1.25 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .ai-builder-items {
+      display: grid;
+      gap: 16px;
+    }
+    .ai-builder-item {
+      max-width: 780px;
+      padding: 0 0 16px;
+    }
+    .ai-builder-item .item-title {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 1.42;
+    }
+    .ai-builder-item .summary {
+      margin-bottom: 10px;
+      font-size: 15px;
+      line-height: 1.72;
+    }
+    .ai-builder-item .source-date {
+      margin-bottom: 0;
+      font-size: 11px;
+    }
+    .item-title {
+      margin: 0 0 12px;
+      font: 700 20px/1.38 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      letter-spacing: -0.01em;
+      color: var(--title);
+    }
+    .title-link {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: none;
+    }
+    .title-link:hover {
+      color: var(--accent);
+    }
+    .summary {
+      margin: 0 0 16px;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Noto Serif SC", "Songti SC", serif;
+      font-size: 16px;
+      line-height: 1.78;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      color: var(--text);
+    }
+    .source-date {
+      margin: 0 0 12px;
+      font: 500 12px/1.6 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--muted);
+    }
+    .meta-lines {
+      display: grid;
+      gap: 6px;
+      margin: 0 0 12px;
+      padding: 12px 0 0;
+      border-top: 1px solid rgba(221, 214, 206, 0.78);
+      background: transparent;
+    }
+    .meta-line {
+      font: 500 12px/1.6 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--muted);
+    }
+    .github-meta {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 12px;
+    }
+    .github-meta .tags {
+      margin: 0;
+    }
+    .github-stats {
+      display: flex !important;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      align-items: center;
+    }
+    .github-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font: 600 12px/1.3 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .github-stat-icon {
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1;
+    }
+    .github-stat-text {
+      color: inherit;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 4px 0 0;
+    }
+    .tag {
+      display: inline-flex;
+      padding: 3px 7px;
+      border: 1px solid var(--tag-border);
+      background: var(--tag-bg);
+      color: var(--accent);
+      font: 600 11px/1.2 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      border-radius: 4px;
+    }
+    .reader-link {
+      font: 500 12px/1.45 "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--muted);
+      word-break: break-word;
+    }
+    a {
+      color: #c2410c;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(194, 65, 12, 0.15);
+    }
+    code {
+      font-family: "SFMono-Regular", "Menlo", monospace;
+      font-size: 0.88em;
+      padding: 0.04em 0.22em;
+      border-radius: 3px;
+      background: rgba(124, 45, 18, 0.06);
+    }
+    @media (max-width: 767px) {
+      .page {
+        max-width: none;
+        padding: 14px 14px 36px;
+      }
+      .section-nav {
+        margin-top: 12px;
+        padding: 8px 0 10px;
+      }
+      .page.is-embedded .section-nav {
+        margin-top: 0;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      .section-title {
+        margin: 28px 0 16px;
+      }
+      .reader-item {
+        padding-bottom: 20px;
+        max-width: none;
+      }
+      .reader-item + .reader-item {
+        padding-top: 20px;
+      }
+      .item-title {
+        font-size: 18px;
+      }
+      .summary {
+        font-size: 15px;
+        line-height: 1.72;
+      }
+      .ai-builder-digest {
+        gap: 22px;
+      }
+    }
+    @media (min-width: 768px) {
+      .page {
+        padding: 20px 28px 56px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" data-language="zh">
+    <div class="topbar">
+      <a class="topbar-home-link" href="https://womenstack.github.io/women-stack-daily-site/">
+        <span class="lang-inline" data-lang="zh">返回首页</span>
+        <span class="lang-inline" data-lang="en">Back Home</span>
+      </a>
+      <div class="topbar-actions">
+        <div class="language-switch" aria-label="Language switcher">
+          <button class="lang-toggle is-active" type="button" data-target-lang="zh">中文</button>
+          <button class="lang-toggle" type="button" data-target-lang="en">EN</button>
+        </div>
+        <a
+          class="topbar-icon-link"
+          href="https://github.com/WomenStack"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Women Stack GitHub"
+          title="Women Stack GitHub"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.42-4.04-1.42-.55-1.38-1.33-1.75-1.33-1.75-1.09-.73.08-.72.08-.72 1.2.09 1.84 1.23 1.84 1.23 1.08 1.83 2.82 1.3 3.5.99.11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.92 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.3 11.3 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.65.25 2.88.13 3.18.77.84 1.23 1.91 1.23 3.22 0 4.6-2.8 5.61-5.48 5.91.43.37.82 1.11.82 2.24l-.02 3.32c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <section class="hero">
+      <div class="eyebrow">Women Stack Daily</div>
+      <h1 class="hero-title">Women Stack Daily</h1>
+      <div class="subtitle">
+        <span class="lang-inline" data-lang="zh">面向科技从业者的每日技术与行业快报。</span>
+        <span class="lang-inline" data-lang="en">A daily briefing on technology and industry updates.</span>
+      </div>
+      <div class="meta-date">2026-05-23</div>
+    </section>
+    <div class="section-nav" aria-label="Section navigation">
+      <div class="section-nav-inner">
+        <div class="counts"><a class="count-pill" href="#official-updates"><span class="lang-inline" data-lang="zh">官方更新</span><span class="lang-inline" data-lang="en">Official Updates</span></a><a class="count-pill" href="#ai-builders"><span class="lang-inline" data-lang="zh">AI 建造者</span><span class="lang-inline" data-lang="en">AI Builders</span></a><a class="count-pill" href="#tech-news"><span class="lang-inline" data-lang="zh">科技新闻</span><span class="lang-inline" data-lang="en">Tech News</span></a><a class="count-pill" href="#technical-reads"><span class="lang-inline" data-lang="zh">技术阅读</span><span class="lang-inline" data-lang="en">Technical Reads</span></a><a class="count-pill" href="#community-signals"><span class="lang-inline" data-lang="zh">社区信号</span><span class="lang-inline" data-lang="en">Community Signals</span></a><a class="count-pill" href="#github-trending"><span class="lang-inline" data-lang="zh">GitHub 热榜</span><span class="lang-inline" data-lang="en">GitHub Trending</span></a></div>
+      </div>
+    </div>
+    <section class="reader-section" id="official-updates"><h2 class="section-title lang-block" data-lang="zh">官方更新 (8)</h2><h2 class="section-title lang-block" data-lang="en">Official Updates (8)</h2><div class="section-items"><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://openai.com/index/gartner-2026-agentic-coding-leader" target="_blank" rel="noreferrer">OpenAI 被 Gartner 评为 enterprise coding agents 领导者</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://openai.com/index/gartner-2026-agentic-coding-leader" target="_blank" rel="noreferrer">OpenAI named a Leader in enterprise coding agents by Gartner</a></h3><p class="summary lang-block" data-lang="zh">OpenAI 宣布在 2026 Gartner Magic Quadrant for Enterprise AI Coding Agents 中被评为 Leader，Codex 因创新和企业级部署能力被认可。企业 coding agent 竞争正在从开发者口碑进入正式分析师评价体系。</p><p class="summary lang-block" data-lang="en">OpenAI is named a leader in the 2026 Gartner Magic Quadrant for Enterprise AI Coding Agents, with Codex recognized for innovation and enterprise-scale deployment.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：OpenAI</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: OpenAI</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI Agent</span><span class="lang-inline" data-lang="en">AI Agent</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://aws.amazon.com/about-aws/whats-new/2026/05/domain-management-iam-idc" target="_blank" rel="noreferrer">Amazon SageMaker 扩展跨 domain types 的 domain management</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://aws.amazon.com/about-aws/whats-new/2026/05/domain-management-iam-idc" target="_blank" rel="noreferrer">Amazon SageMaker expands domain management across domain types</a></h3><p class="summary lang-block" data-lang="zh">Amazon SageMaker Unified Studio 现在为 Identity Center 和 IAM-based domains 提供 AWS console 外的 domain management experience，让管理员和数据管理团队更灵活地创建和管理 domain。AI/data platform 的治理体验继续向统一管理靠拢。</p><p class="summary lang-block" data-lang="en">Amazon SageMaker Unified Studio now provides domain management experience for Identity Center and IAM-based domains outside of AWS console, allows administrators and data management teams to create a…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：AWS What&#x27;s New</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: AWS What&#x27;s New</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Security</span><span class="lang-inline" data-lang="en">Security</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Data</span><span class="lang-inline" data-lang="en">Data</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.blog/ai-and-ml/github-copilot/github-recognized-as-a-leader-in-the-gartner-magic-quadrant-for-enterprise-ai-coding-agents-for-the-third-year-in-a-row" target="_blank" rel="noreferrer">GitHub 连续第三年被 Gartner Magic Quadrant 评为 Enterprise AI Coding Agents Leader</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.blog/ai-and-ml/github-copilot/github-recognized-as-a-leader-in-the-gartner-magic-quadrant-for-enterprise-ai-coding-agents-for-the-third-year-in-a-row" target="_blank" rel="noreferrer">GitHub recognized as a Leader in the Gartner® Magic Quadrant™ for Enterprise AI Coding Agents for the third year in a row</a></h3><p class="summary lang-block" data-lang="zh">GitHub 表示将继续构建 open、secure、AI-powered developer platform，并连续第三年被 Gartner 评为 Enterprise AI Coding Agents Leader。Copilot/Codex 类工具的企业市场已经进入平台级竞争。</p><p class="summary lang-block" data-lang="en">We are committed to empowering every developer by building an open, secure, and AI-powered platform that defines the future of software development.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：GitHub Blog</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: GitHub Blog</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">DevOps</span><span class="lang-inline" data-lang="en">DevOps</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI Agent</span><span class="lang-inline" data-lang="en">AI Agent</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://developer.nvidia.com/blog/synthesize-realistic-3d-medical-images-at-scale-to-ship-pre-trained-models" target="_blank" rel="noreferrer">NVIDIA：大规模合成真实 3D 医学图像以交付预训练模型</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://developer.nvidia.com/blog/synthesize-realistic-3d-medical-images-at-scale-to-ship-pre-trained-models" target="_blank" rel="noreferrer">Synthesize Realistic 3D Medical Images at Scale to Ship Pre‑Trained Models</a></h3><p class="summary lang-block" data-lang="zh">NVIDIA 讨论如何合成高质量 3D medical imaging data，以缓解真实医学影像数据受稀缺性、隐私和标注限制影响的问题。医疗 AI 的关键瓶颈之一仍是数据，synthetic data 正在成为模型交付路径的一部分。</p><p class="summary lang-block" data-lang="en">High‑quality 3D medical imaging data is the foundation of modern radiology AI, but access to it is often constrained by data scarcity, privacy restrictions,...</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：NVIDIA Developer Blog</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: NVIDIA Developer Blog</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://openai.com/index/virgin-atlantic" target="_blank" rel="noreferrer">Virgin Atlantic 如何用 Codex 更快交付</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://openai.com/index/virgin-atlantic" target="_blank" rel="noreferrer">How Virgin Atlantic ships faster with Codex</a></h3><p class="summary lang-block" data-lang="zh">OpenAI 介绍 Virgin Atlantic 如何使用 Codex 在固定假日旅行 deadline 前交付 revamped mobile app，并达到接近完整的 unit test coverage 和 zero P1 defects。这个案例强调 Codex 在 deadline、测试覆盖和质量控制中的企业交付价值。</p><p class="summary lang-block" data-lang="en">How Virgin Atlantic used Codex to ship its revamped mobile app on a fixed holiday travel deadline, reaching near-total unit test coverage and zero P1 defects.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：OpenAI</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: OpenAI</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Testing</span><span class="lang-inline" data-lang="en">Testing</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Mobile</span><span class="lang-inline" data-lang="en">Mobile</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://aws.amazon.com/about-aws/whats-new/2026/05/assessment-capabilities-transform" target="_blank" rel="noreferrer">AWS Transform 新增 agentic migration assessment capabilities</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://aws.amazon.com/about-aws/whats-new/2026/05/assessment-capabilities-transform" target="_blank" rel="noreferrer">New agentic migration assessment capabilities now available with AWS Transform</a></h3><p class="summary lang-block" data-lang="zh">AWS Transform 增加 migration assessment 能力，包括 what-if scenarios、自定义假设、灵活文件格式支持，以及新的 TCO 估算选项。云迁移评估正在变得更 agentic：不只是扫描现状，也能帮助团队模拟决策。</p><p class="summary lang-block" data-lang="en">AWS Transform now offers advanced migration assessment capabilities including what-if scenarios, customizable assumptions, flexible file format support, and multiple new total cost of ownership (TCO)…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：AWS What&#x27;s New</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: AWS What&#x27;s New</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span><span class="tag"><span class="lang-inline" data-lang="zh">DX</span><span class="lang-inline" data-lang="en">DX</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Cloud</span><span class="lang-inline" data-lang="en">Cloud</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.ai/news/grok-opencode" target="_blank" rel="noreferrer">xAI：在 OpenCode 中使用 Grok</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.ai/news/grok-opencode" target="_blank" rel="noreferrer">May 21, 2026Use Grok in OpenCodeLatest postMay 21, 2026Use Grok in OpenCodeUse your SuperGrok or X Premium subscription inside OpenCode.Read More</a></h3><p class="summary lang-block" data-lang="zh">xAI 宣布可以在 OpenCode 中使用 SuperGrok 或 X Premium subscription。Grok 正在加速接入 coding agent 和开发工具链，延续近期 Skills、OpenClaw、Hermes Agent、Grok Build 等发布节奏。</p><p class="summary lang-block" data-lang="en">May 19, 2026Use Grok in OpenClawMay 18, 2026Skills in web, iOS, and AndroidMay 15, 2026Connect Grok to Hermes AgentMay 14, 2026Introducing Grok Build</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-21 · 来源：xAI</div><div class="lang-block" data-lang="en">Published: 2026-05-21 · Source: xAI</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Mobile</span><span class="lang-inline" data-lang="en">Mobile</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.ai/news/grok-openclaw" target="_blank" rel="noreferrer">xAI：在 OpenClaw 中使用 Grok</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.ai/news/grok-openclaw" target="_blank" rel="noreferrer">May 19, 2026Use Grok in OpenClaw</a></h3><p class="summary lang-block" data-lang="zh">xAI 继续把 Grok 接入 OpenClaw 等 agent 工具。虽然这条不是今天新发布，但它和 OpenCode/Grok Skills 一起说明 xAI 正在把 Grok 从聊天产品推向开发者 agent 生态。</p><p class="summary lang-block" data-lang="en">May 18, 2026Skills in web, iOS, and AndroidMay 15, 2026Connect Grok to Hermes AgentMay 14, 2026Introducing Grok Build</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-19 · 来源：xAI</div><div class="lang-block" data-lang="en">Published: 2026-05-19 · Source: xAI</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Mobile</span><span class="lang-inline" data-lang="en">Mobile</span></span></div></article></div></section><section class="reader-section" id="ai-builders"><h2 class="section-title lang-block" data-lang="zh">AI 建造者 (17)</h2><h2 class="section-title lang-block" data-lang="en">AI Builders (17)</h2><div class="ai-builder-digest"><div class="ai-builder-group"><h3 class="ai-builder-group-title lang-block" data-lang="zh">X / Twitter</h3><h3 class="ai-builder-group-title lang-block" data-lang="en">X / Twitter</h3><div class="ai-builder-items"><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/swyx/status/2057700807576043825" target="_blank" rel="noreferrer">Swyx</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/swyx/status/2057700807576043825" target="_blank" rel="noreferrer">Swyx</a></h3><p class="summary lang-block" data-lang="zh">Swyx 提到 <code>--dangerously-skip-git</code> 相关上下文。这个信号和 agent 权限疲劳很有关：当开发者为了速度跳过安全检查时，工具需要提供更好的自动模式和可恢复边界，而不是只靠用户每次点 approve。</p><p class="summary lang-block" data-lang="en">more here —dangerously-skip-git</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/joshwoodward/status/2057564491064483930" target="_blank" rel="noreferrer">Josh Woodward</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/joshwoodward/status/2057564491064483930" target="_blank" rel="noreferrer">Josh Woodward</a></h3><p class="summary lang-block" data-lang="zh">Josh Woodward 回顾 Google Labs 在 I/O 的一系列发布，并希望用户享受新功能。Google Labs 的节奏说明大公司 AI 实验室正在把 research demo 更快推向 creator-facing 产品体验。</p><p class="summary lang-block" data-lang="en">What a ride for @GoogleLabs at IO! Hope you&#x27;re enjoying lots of the new stuff!</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-21</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/petergyang/status/2057674020481593710" target="_blank" rel="noreferrer">Peter Yang</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/petergyang/status/2057674020481593710" target="_blank" rel="noreferrer">Peter Yang</a></h3><p class="summary lang-block" data-lang="zh">Peter Yang 说 Codex automation 是 game changer，并准备试用。builder 圈对 coding agent 的关注点正从“能不能写代码”转向“能不能自动跑完整任务流”。</p><p class="summary lang-block" data-lang="en">Game changer Codex automation 🙂 Ok trying this out</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/GoogleLabs/status/2057492242911404443" target="_blank" rel="noreferrer">Google Labs</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/GoogleLabs/status/2057492242911404443" target="_blank" rel="noreferrer">Google Labs</a></h3><p class="summary lang-block" data-lang="zh">Google Labs 邀请用户探索最新 experiments 并分享创作。AI 实验产品正在通过社区反馈循环寻找真正的使用场景，而不是只靠发布会完成叙事。</p><p class="summary lang-block" data-lang="en">(5/5) Discover our latest experiments and help shape the future of AI technology at Share what you create! We want to see!</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-21</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/amasad/status/2057616724757827826" target="_blank" rel="noreferrer">Amjad Masad</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/amasad/status/2057616724757827826" target="_blank" rel="noreferrer">Amjad Masad</a></h3><p class="summary lang-block" data-lang="zh">Amjad Masad 说用户可以 monetise apps 并获得 credit rewards，同时不应被迫和销售沟通才能购买产品。开发者平台的商业化体验正在变得更 self-serve，也更面向 indie builders。</p><p class="summary lang-block" data-lang="en">Monetize your apps and we’ll give you credit rewards. We’re always excited to talk to customers but you shouldn’t be forced to talk to us to buy the product.</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/levie/status/2057663408376516703" target="_blank" rel="noreferrer">Aaron Levie</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/levie/status/2057663408376516703" target="_blank" rel="noreferrer">Aaron Levie</a></h3><p class="summary lang-block" data-lang="zh">Aaron Levie 指出 AI 从便宜的小上下文聊天工具，变成大上下文、能跟踪长期任务的 agents 后，成本结构完全不同。企业 AI 的真正挑战不只是模型能力，而是长期运行工作流的 token 和预算治理。</p><p class="summary lang-block" data-lang="en">What’s happened is that we went from AI chat tools that were relatively cheap and had small context windows, to AI agents that have giant context windows, the ability to keep track of longer running work, and models tha…</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/ryolu_/status/2057500107235557675" target="_blank" rel="noreferrer">Ryo Lu</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/ryolu_/status/2057500107235557675" target="_blank" rel="noreferrer">Ryo Lu</a></h3><p class="summary lang-block" data-lang="zh">Ryo Lu 强调 building software is more fun together，并提到新的 model、interface、sdk 和 automations。AI coding 工具正在从单人 productivity 走向团队协作界面。</p><p class="summary lang-block" data-lang="en">building software is more fun together try our new model, interface, sdk, automations with your team</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-21</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/garrytan/status/2057701084031004928" target="_blank" rel="noreferrer">Garry Tan</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/garrytan/status/2057701084031004928" target="_blank" rel="noreferrer">Garry Tan</a></h3><p class="summary lang-block" data-lang="zh">Garry Tan 讨论一个工程师如何成为 1000x founder。AI 时代的 founder 叙事越来越强调工程能力、产品判断和放大杠杆之间的组合。</p><p class="summary lang-block" data-lang="en">How does one engineer become a 1000x founder? @sdianahu and I give you the real goods here Thanks @AnjneyMidha for having us!</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/mattturck/status/2057498135300039068" target="_blank" rel="noreferrer">Matt Turck</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/mattturck/status/2057498135300039068" target="_blank" rel="noreferrer">Matt Turck</a></h3><p class="summary lang-block" data-lang="zh">Matt Turck 推荐与 OpenAI Yann Dubois 的对话，主题是为什么 AI progress suddenly feels real。近期 builder 圈反复出现一个共识：可靠性跨过某个阈值后，AI 工具会突然从玩具变成工作基础设施。</p><p class="summary lang-block" data-lang="en">This fantastic conversation with @yanndubs is also available on Spotify, Apple Podcasts and here on YouTube (like and subscribe!): Why AI Progress Suddenly Feels Real - my conversation with @yanndubs, who co-leads the P…</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-21</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/zarazhangrui/status/2057710468064825417" target="_blank" rel="noreferrer">Zara Zhang</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/zarazhangrui/status/2057710468064825417" target="_blank" rel="noreferrer">Zara Zhang</a></h3><p class="summary lang-block" data-lang="zh">Zara Zhang 介绍 Claude Code Lark/Feishu Bridge，可在飞书里像同事一样和 Claude Code 对话，在手机上使用 Claude Code，并把多个会话作为群聊管理。coding agent 正在进入团队聊天界面，离真实协作更近一步。</p><p class="summary lang-block" data-lang="en">GitHub: Introducing the Claude Code Lark/Feishu Bridge 🌉 (open-source) Talk to Claude Code in Lark/Feishu like a colleague - Use Claude Code on your phone via Lark chat - Manage multiple CC sessions as group chats in La…</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/nikunj/status/2057462304149778588" target="_blank" rel="noreferrer">Nikunj Kothari</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/nikunj/status/2057462304149778588" target="_blank" rel="noreferrer">Nikunj Kothari</a></h3><p class="summary lang-block" data-lang="zh">Nikunj Kothari 认为 ex-founders 是帮助 Ramp、Mercor、Figma、Anthropic、Cognition 等公司扩张的重要力量。AI 公司高速增长期，兼具创业经验和执行韧性的人才会非常稀缺。</p><p class="summary lang-block" data-lang="en">ex founders are THE driving force helping scale some of the most iconic companies (@tryramp, @mercor_ai, @figma, @AnthropicAI, @cognition and others). if you are an ex founder wanting to hang out with a stellar peer gro…</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-21</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/danshipper/status/2057631479052517507" target="_blank" rel="noreferrer">Dan Shipper</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/danshipper/status/2057631479052517507" target="_blank" rel="noreferrer">Dan Shipper</a></h3><p class="summary lang-block" data-lang="zh">Dan Shipper 回忆 20 年前自己提交的故事登上 Digg 首页，如今又有类似“回来了”的感觉。内容分发平台变化很多，但 builder 对被社区看见的兴奋感一直没变。</p><p class="summary lang-block" data-lang="en">~20 years ago I submitted a story that made it to the top of @digg Feels good to be back!</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/adityaag/status/2057502381038846306" target="_blank" rel="noreferrer">Aditya Agarwal</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/adityaag/status/2057502381038846306" target="_blank" rel="noreferrer">Aditya Agarwal</a></h3><p class="summary lang-block" data-lang="zh">Aditya Agarwal 分享 early-stage hiring 的判断：如果工程师在 pre-Series-B startup 和 BigCo/BigLab 之间犹豫，就可能还没准备好创业公司。AI 热潮下，早期团队更需要强烈偏好不确定性的人。</p><p class="summary lang-block" data-lang="en">4 thoughts on early-stage hiring: 1/ If an engineer is trying to pick between a pre Series-B company and a BigCo/BigLab --&gt; stop talking to them immediately. They are clearly not ready for a startup.</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-21</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/sama/status/2057614780727480741" target="_blank" rel="noreferrer">Sam Altman</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/sama/status/2057614780727480741" target="_blank" rel="noreferrer">Sam Altman</a></h3><p class="summary lang-block" data-lang="zh">Sam Altman 问大家最希望 AI 未来解决什么问题，并说“也许我们能帮上忙”。这类开放式提问是产品和研究路线的信号收集，也反映 OpenAI 仍在寻找更广泛的高价值问题入口。</p><p class="summary lang-block" data-lang="en">what problem do you most hope AI will solve in the future? maybe we can help!</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-22</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-22</div></div></article><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://x.com/claudeai/status/2057487475983929388" target="_blank" rel="noreferrer">Claude</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://x.com/claudeai/status/2057487475983929388" target="_blank" rel="noreferrer">Claude</a></h3><p class="summary lang-block" data-lang="zh">Claude 官方问用户正在用 Claude Design 做什么。AI design 工具正在尝试从“生成一张图”进入更完整的设计协作和产品创作流程。</p><p class="summary lang-block" data-lang="en">What are you making with Claude Design?</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / X · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / X · 2026-05-21</div></div></article></div></div><div class="ai-builder-group"><h3 class="ai-builder-group-title lang-block" data-lang="zh">官方博客</h3><h3 class="ai-builder-group-title lang-block" data-lang="en">OFFICIAL BLOGS</h3><div class="ai-builder-items"><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noreferrer">Anthropic Engineering：Claude Code auto mode，一种更安全的跳过权限方式</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noreferrer">Anthropic Engineering: Claude Code auto mode: a safer way to skip permissions</a></h3><p class="summary lang-block" data-lang="zh">Anthropic Engineering 讨论 Claude Code auto mode：默认 approval 能保护用户，但频繁点击会导致 approval fatigue。auto mode 的核心问题是如何在减少打断的同时保留安全边界、恢复机制和用户控制权。</p><p class="summary lang-block" data-lang="en">By default, Claude Code asks users for approval before running commands or modifying files. This keeps users safe, but it also means a lot of clicking &quot;approve.&quot; Over time that leads to approval fatigue, where people stop paying close atte…</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / Blog</div><div class="lang-block" data-lang="en">Follow Builders / Blog</div></div></article></div></div><div class="ai-builder-group"><h3 class="ai-builder-group-title lang-block" data-lang="zh">播客</h3><h3 class="ai-builder-group-title lang-block" data-lang="en">PODCASTS</h3><div class="ai-builder-items"><article class="reader-item ai-builder-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.youtube.com/watch?v=DhD1zZ8w8Mw" target="_blank" rel="noreferrer">The MAD Podcast with Matt Turck：OpenAI 的 Yann Dubois 谈为什么 AI 进展突然变得真实</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.youtube.com/watch?v=DhD1zZ8w8Mw" target="_blank" rel="noreferrer">The MAD Podcast with Matt Turck: OpenAI&#x27;s Yann Dubois: Why AI Progress Suddenly Feels Real</a></h3><p class="summary lang-block" data-lang="zh">Yann Dubois 在访谈中提到，AI 工具需要达到足够可靠性才会真正有用，而 OpenAI 可能已经在去年 12 月左右跨过某个阈值。这个观点解释了为什么最近 agent、coding 和 research workflows 的实际 adoption 感觉突然加速。</p><p class="summary lang-block" data-lang="en">Speaker 1 | 00:00 - 00:26 You need to reach this level of reliability to really make any of these AI tools very useful, and I think we just crossed that probably December last year, at least at OpenAI. Now we can trust these models to do a…</p><div class="source-date ai-builder-source"><div class="lang-block" data-lang="zh">Follow Builders / Podcast · 2026-05-21</div><div class="lang-block" data-lang="en">Follow Builders / Podcast · 2026-05-21</div></div></article></div></div></div></section><section class="reader-section" id="tech-news"><h2 class="section-title lang-block" data-lang="zh">科技新闻 (8)</h2><h2 class="section-title lang-block" data-lang="en">Tech News (8)</h2><div class="section-items"><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.techmeme.com/260522/p35" target="_blank" rel="noreferrer">Fresha 完成 8000 万美元融资，估值超过 10 亿美元</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.techmeme.com/260522/p35" target="_blank" rel="noreferrer">Fresha, a London-based beauty and wellness booking marketplace, raised $80M from KKR&#x27;s growth equity arm at a $1B+ valuation, bringing its total raised to $285M (Dominic-Madori Davis/TechCrunch)</a></h3><p class="summary lang-block" data-lang="zh">TechCrunch 报道称，伦敦 beauty and wellness booking marketplace Fresha 从 KKR growth equity arm 融资 8000 万美元，估值超过 10 亿美元。垂直行业 marketplace 仍然能在强交易场景里获得资本支持。</p><p class="summary lang-block" data-lang="en">Dominic-Madori Davis / TechCrunch: Fresha, a London-based beauty and wellness booking marketplace, raised $80M from KKR&#x27;s growth equity arm at a $1B+ valuation, bringing its total raised to $285M — B…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Techmeme</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Techmeme</div></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.infoq.com/news/2026/05/uber-eats-ranking-system" target="_blank" rel="noreferrer">Uber 用实时信号和 listwise ranking 改进餐厅推荐</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.infoq.com/news/2026/05/uber-eats-ranking-system" target="_blank" rel="noreferrer">Uber Improves Restaurant Recommendations Using Real-Time Signals and Listwise Ranking</a></h3><p class="summary lang-block" data-lang="zh">Uber 更新 Uber Eats Home Feed 推荐系统，使用 near real-time user sequence features 和 Generative Recommender model。推荐系统正在更重视实时上下文和列表级排序，而不是孤立预测单个 item。</p><p class="summary lang-block" data-lang="en">Uber updates its Uber Eats Home Feed recommendation system using near real-time user sequence features and a Generative Recommender model.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：InfoQ</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: InfoQ</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.techmeme.com/260522/p34" target="_blank" rel="noreferrer">Zoom 持有的 Anthropic 股权估值约 12.7 亿美元</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.techmeme.com/260522/p34" target="_blank" rel="noreferrer">Filing: Zoom&#x27;s stake in Anthropic is worth ~$1.27B based on a February round which valued Anthropic at $380B; Zoom invested an additional $46M in recent months (Brody Ford/Bloomberg)</a></h3><p class="summary lang-block" data-lang="zh">Bloomberg 报道称，Zoom 持有的 Anthropic stake 基于 2 月融资估值约 12.7 亿美元，且近期又追加投资 4600 万美元。AI 模型公司股权已经成为大型软件公司的战略资产。</p><p class="summary lang-block" data-lang="en">Brody Ford / Bloomberg: Filing: Zoom&#x27;s stake in Anthropic is worth ~$1.27B based on a February round which valued Anthropic at $380B; Zoom invested an additional $46M in recent months — Zoom Communic…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Techmeme</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Techmeme</div></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.infoq.com/news/2026/05/ai-engineering-certification-pro" target="_blank" rel="noreferrer">InfoQ 推出面向高级软件从业者的 AI Engineering cohort 和认证</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.infoq.com/news/2026/05/ai-engineering-certification-pro" target="_blank" rel="noreferrer">InfoQ Launches Online AI Engineering Cohort and Certification for Senior Software Practitioners</a></h3><p class="summary lang-block" data-lang="zh">InfoQ 推出五周 AI Engineering certification，覆盖 RAG、agents、AI platforms、evals、reliability 和 operational topics。AI engineering 正在从经验拼装变成可培训、可认证、可组织化的专业方向。</p><p class="summary lang-block" data-lang="en">InfoQ has launched a five-week online AI Engineering certification for senior practitioners working on production AI systems, covering RAG, agents, AI platforms, evals, reliability, and operational t…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：InfoQ</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: InfoQ</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI Agent</span><span class="lang-inline" data-lang="en">AI Agent</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.techmeme.com/260522/p33" target="_blank" rel="noreferrer">美国 NTSB 暂停交通事故数据库访问，因有人用 AI 重建遇难飞行员声音</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.techmeme.com/260522/p33" target="_blank" rel="noreferrer">The US NTSB suspends access to its database of civil transportation accidents after people re-created voices of pilots killed in a 2025 UPS plane crash using AI (Jeremy Hsu/Ars Technica)</a></h3><p class="summary lang-block" data-lang="zh">Ars Technica 报道称，美国 NTSB 暂停 civil transportation accidents database 访问，因为有人用 AI 重建 2025 年 UPS 空难遇难飞行员声音。公开数据、AI 生成和遇难者尊严之间的边界，正在成为新的治理问题。</p><p class="summary lang-block" data-lang="en">Jeremy Hsu / Ars Technica: The US NTSB suspends access to its database of civil transportation accidents after people re-created voices of pilots killed in a 2025 UPS plane crash using AI — Pilots&#x27; v…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Techmeme</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Techmeme</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.infoq.com/news/2026/05/discord-scylladb-automation" target="_blank" rel="noreferrer">Discord 围绕自动化重建数据库运维，以大规模管理 ScyllaDB</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.infoq.com/news/2026/05/discord-scylladb-automation" target="_blank" rel="noreferrer">Discord Rebuilds Database Operations Around Automation to Manage ScyllaDB at Massive Scale</a></h3><p class="summary lang-block" data-lang="zh">Discord 介绍如何围绕内部 orchestration framework Scylla Control Plane 重建数据库运维，让小型基础设施团队也能自动化管理大规模 ScyllaDB。大规模数据库运维的重点越来越像平台工程：标准化、编排和自动化。</p><p class="summary lang-block" data-lang="en">Discord has detailed how it rebuilt its database operations around a new internal orchestration framework called the Scylla Control Plane (SCP), enabling its small infrastructure team to automate lar…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：InfoQ</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: InfoQ</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span><span class="tag"><span class="lang-inline" data-lang="zh">DevOps</span><span class="lang-inline" data-lang="en">DevOps</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.techmeme.com/260522/p32" target="_blank" rel="noreferrer">Anthropic 称 Claude Mythos Preview 已帮助发现 1 万多个高危或严重漏洞</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.techmeme.com/260522/p32" target="_blank" rel="noreferrer">Anthropic says Claude Mythos Preview has been used to find more than 10,000 high- or critical-severity vulnerabilities since the launch of Project Glasswing (Anthropic)</a></h3><p class="summary lang-block" data-lang="zh">Anthropic 表示自 Project Glasswing 启动以来，Claude Mythos Preview 已被用于发现超过 10,000 个 high- or critical-severity vulnerabilities。AI 安全工具正在从辅助审计走向更大规模的漏洞发现流程。</p><p class="summary lang-block" data-lang="en">Anthropic: Anthropic says Claude Mythos Preview has been used to find more than 10,000 high- or critical-severity vulnerabilities since the launch of Project Glasswing — Last month, we launched Proje…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Techmeme</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Techmeme</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://www.infoq.com/news/2026/05/xai-grok-skills" target="_blank" rel="noreferrer">xAI 发布 Grok Skills，并更新 Tool Calling Responses API</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://www.infoq.com/news/2026/05/xai-grok-skills" target="_blank" rel="noreferrer">xAI Releases Grok Skills and Updates Tool Calling Responses API</a></h3><p class="summary lang-block" data-lang="zh">xAI 发布 Grok Skills，并增强 Grok 4.3 的 Responses API，使模型可以在对话之间保留 persistent custom expertise。skills 机制正在成为各家模型平台的共同产品形态。</p><p class="summary lang-block" data-lang="en">xAI has released Grok Skills together with enhancements to the Responses API for Grok 4.3, enabling persistent custom expertise that the model retains across all conversations.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：InfoQ</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: InfoQ</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span></div></article></div></section><section class="reader-section" id="technical-reads"><h2 class="section-title lang-block" data-lang="zh">技术阅读 (6)</h2><h2 class="section-title lang-block" data-lang="en">Technical Reads (6)</h2><div class="section-items"><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://dev.to/emma_johnson_5b2ebd8633a7/beyond-text-rewrites-the-shift-to-ast-aware-code-refactoring-for-ai-agents-2agh" target="_blank" rel="noreferrer">从文本重写到 AST-aware：AI Agents 代码重构方式正在变化</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://dev.to/emma_johnson_5b2ebd8633a7/beyond-text-rewrites-the-shift-to-ast-aware-code-refactoring-for-ai-agents-2agh" target="_blank" rel="noreferrer">Beyond Text Rewrites: The Shift to AST-Aware Code Refactoring for AI Agents</a></h3><p class="summary lang-block" data-lang="zh">文章讨论 AI coding assistants 普及后，代码修改不能只停留在文本替换层，而需要更多 AST-aware refactoring。对 agent 来说，理解语法结构、作用域、依赖和重构安全边界，比“看起来改对了几行”更重要。</p><p class="summary lang-block" data-lang="en">The rapid adoption of AI coding assistants has fundamentally changed how software engineers write, debug, and explore codebases.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：DEV Community</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: DEV Community</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Performance</span><span class="lang-inline" data-lang="en">Performance</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Debugging</span><span class="lang-inline" data-lang="en">Debugging</span></span><span class="tag"><span class="lang-inline" data-lang="zh">DX</span><span class="lang-inline" data-lang="en">DX</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Architecture</span><span class="lang-inline" data-lang="en">Architecture</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://medium.com/@techsolutionsold/system-design-e3991b3168a1" target="_blank" rel="noreferrer">新｜System Design</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://medium.com/@techsolutionsold/system-design-e3991b3168a1" target="_blank" rel="noreferrer">system design</a></h3><p class="summary lang-block" data-lang="zh">这是一篇偏 architecture、design 和工程实践的 system design 文章。虽然英文摘要较泛，但今天收录它可以作为系统设计学习提醒：AI 工具变强之后，需求拆解、容量估算、边界定义和权衡表达仍然是工程师核心能力。</p><p class="summary lang-block" data-lang="en">An article from Medium Design Systems for developers, focused on Architecture, Design, Essay and pr…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-23 · 来源：Medium Design Systems</div><div class="lang-block" data-lang="en">Published: 2026-05-23 · Source: Medium Design Systems</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">新</span><span class="lang-inline" data-lang="en">新</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Architecture</span><span class="lang-inline" data-lang="en">Architecture</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Design</span><span class="lang-inline" data-lang="en">Design</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Essay</span><span class="lang-inline" data-lang="en">Essay</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://ujjwaltiwari2.medium.com/frontend-system-design-of-maps-in-hyperlocal-delivery-how-zomato-swiggy-and-rapido-actually-51b071e1d255" target="_blank" rel="noreferrer">Hyperlocal Delivery 地图的前端系统设计：Zomato、Swiggy、Rapido 实际怎么做</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://ujjwaltiwari2.medium.com/frontend-system-design-of-maps-in-hyperlocal-delivery-how-zomato-swiggy-and-rapido-actually-51b071e1d255" target="_blank" rel="noreferrer">Frontend System Design of Maps in Hyperlocal Delivery — How Zomato, Swiggy, and Rapido Actually…</a></h3><p class="summary lang-block" data-lang="zh">文章从前端系统设计角度讨论本地即时配送里的地图体验，包括实时位置、路线、状态更新和用户交互。对前端来说，地图类产品不是简单嵌一个 SDK，而是数据刷新、性能、状态同步和 UX 反馈的综合工程。</p><p class="summary lang-block" data-lang="en">An article from Medium Frontend for developers, focused on Architecture, Frontend, Design and pract…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Medium Frontend</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Medium Frontend</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Architecture</span><span class="lang-inline" data-lang="en">Architecture</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Frontend</span><span class="lang-inline" data-lang="en">Frontend</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Design</span><span class="lang-inline" data-lang="en">Design</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Essay</span><span class="lang-inline" data-lang="en">Essay</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://blog.cloudflare.com/casb-anthropic-integration" target="_blank" rel="noreferrer">Cloudflare CASB 支持 Claude Compliance API</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://blog.cloudflare.com/casb-anthropic-integration" target="_blank" rel="noreferrer">Announcing Claude Compliance API support with Cloudflare CASB</a></h3><p class="summary lang-block" data-lang="zh">Cloudflare 现在集成 Claude Compliance API，让安全团队可以在 Cloudflare Dashboard 中监控 Claude Enterprise 活动。企业采用 AI 工具后，安全团队需要的不只是开关权限，还包括审计、可见性和合规证据链。</p><p class="summary lang-block" data-lang="en">Cloudflare now integrates with the Claude Compliance API, so that security teams can monitor Claude Enterprise activity directly in the Cloudflare Dashboard.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-21 · 来源：Cloudflare Blog</div><div class="lang-block" data-lang="en">Published: 2026-05-21 · Source: Cloudflare Blog</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Security</span><span class="lang-inline" data-lang="en">Security</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://simonwillison.net/2026/May/22/memory-shortage" target="_blank" rel="noreferrer">内存短缺正在重定价消费电子产品</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://simonwillison.net/2026/May/22/memory-shortage" target="_blank" rel="noreferrer">The memory shortage is causing a repricing of consumer electronics</a></h3><p class="summary lang-block" data-lang="zh">Simon Willison 转述 David Oks 对 memory shortage 的解释：使用内存的消费电子产品可能会明显涨价。AI 基础设施对 HBM、DRAM 和供应链的挤压，不只影响数据中心，也会传导到手机、笔记本和消费硬件。</p><p class="summary lang-block" data-lang="en">The memory shortage is causing a repricing of consumer electronics David Oks provides the clearest explanation I&#x27;ve seen yet of why consumer products that use memory are likely to get significantly m…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Simon Willison</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Simon Willison</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Mobile</span><span class="lang-inline" data-lang="en">Mobile</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://simonwillison.net/2026/May/22/ftc-active-listening" target="_blank" rel="noreferrer">FTC 要求 Cox Media Group 等公司为“Active Listening” AI 营销服务误导客户支付近 100 万美元</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://simonwillison.net/2026/May/22/ftc-active-listening" target="_blank" rel="noreferrer">FTC to Require Cox Media Group, Two Other Firms to Pay Nearly $1 Million to Settle Charges They Deceived Customers About “Active Listening” AI-Powered Marketing Service</a></h3><p class="summary lang-block" data-lang="zh">FTC 要求 Cox Media Group 等公司就“Active Listening” AI-powered marketing service 的误导性宣传达成和解。这个案例提醒 AI 产品营销不能靠模糊恐惧和暗示式能力包装，尤其涉及监听、隐私和用户数据时。</p><p class="summary lang-block" data-lang="en">FTC to Require Cox Media Group, Two Other Firms to Pay Nearly $1 Million to Settle Charges They Deceived Customers About “Active Listening” AI-Powered Marketing Service Back in 2024 Cox Media Group w…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Simon Willison</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Simon Willison</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Deep Dive</span><span class="lang-inline" data-lang="en">Deep Dive</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Mobile</span><span class="lang-inline" data-lang="en">Mobile</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article></div></section><section class="reader-section" id="community-signals"><h2 class="section-title lang-block" data-lang="zh">社区信号 (10)</h2><h2 class="section-title lang-block" data-lang="en">Community Signals (10)</h2><div class="section-items"><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkfvvj" target="_blank" rel="noreferrer">DeepSeek 推进 102.9 亿美元融资，梁文锋承诺继续开发开源 AI 模型</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkfvvj" target="_blank" rel="noreferrer">DeepSeek is pushing forward with $10.29 billion financing round, with Liang Wenfeng committing to continue developing open-source AI models rather than pursuing short-term commercialization goals</a></h3><p class="summary lang-block" data-lang="zh">LocalLLaMA 社区讨论 DeepSeek 融资和继续投入 open-source AI models 的消息。开源模型路线如果继续获得大额资本支持，会进一步影响全球模型竞争和本地部署生态。</p><p class="summary lang-block" data-lang="en">A discussion from r/LocalLLaMA, centered on AI and what developers are reacting to right now.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkw5ri" target="_blank" rel="noreferrer">NVIDIA 从财报中移除 Gaming Revenue Category</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkw5ri" target="_blank" rel="noreferrer">NVIDIA Removes Gaming Revenue Category From Financial Reports</a></h3><p class="summary lang-block" data-lang="zh">社区关注 NVIDIA 财报分类变化，尤其是 gaming 与 AI/data center 叙事之间的关系。硬件公司的收入口径变化，往往也反映战略重心和投资者叙事的转移。</p><p class="summary lang-block" data-lang="en">A discussion from r/LocalLLaMA, centered on current developer discussion and what developers are re…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkejqr" target="_blank" rel="noreferrer">NuExtract3 发布：面向 Markdown、OCR 和结构化抽取的 open-weight 4B VLM</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkejqr" target="_blank" rel="noreferrer">NuExtract3 released: open-weight 4B VLM for Markdown, OCR and structured extraction (self-hostable) [P]</a></h3><p class="summary lang-block" data-lang="zh">Numind 发布 Apache-2.0 许可的 4B VLM，基于 Qwen3.5-4B，聚焦 Markdown、OCR 和 structured extraction。小模型、多模态和自托管抽取能力，是企业文档自动化非常实际的方向。</p><p class="summary lang-block" data-lang="en">Disclaimer: I work for Numind, the company behind this open-weight model We just released a 4B model based on Qwen3.5-4B, under Apache-2.0 license.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkuu66" target="_blank" rel="noreferrer">COLM 2026 reviews 已出，大家怎么看评审质量？</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkuu66" target="_blank" rel="noreferrer">COLM 2026 ReviewsDiscussion [D]</a></h3><p class="summary lang-block" data-lang="zh">MachineLearning 社区讨论 COLM 2026 reviews 的质量。顶会评审质量、审稿一致性和 AI 时代论文增长压力，仍然是研究社区长期焦虑。</p><p class="summary lang-block" data-lang="en">Didn&#x27;t see one so wanted to make one myself. Reviews are actually already out, curious what everyone thinks about the quality of the reviews?</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkb0op" target="_blank" rel="noreferrer">传 Microsoft 因 token-based AI billing 冲爆年度预算，取消内部 Anthropic licenses</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkb0op" target="_blank" rel="noreferrer">Microsoft Cancels Internal Anthropic Licenses As Shift To Token-Based AI Billing Blows Up Annual Budgets In Months</a></h3><p class="summary lang-block" data-lang="zh">社区围绕 Microsoft 取消内部 Anthropic licenses 的传闻讨论 AI 成本。无论传闻细节如何，token-based billing 正在从开发者成本变成企业预算治理问题。</p><p class="summary lang-block" data-lang="en">Summary: AGI has been cancelled due to inflation. AI has become so expensive that even Microsoft can not afford it.</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkb6p9" target="_blank" rel="noreferrer">重新思考 AI Bubble</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkb6p9" target="_blank" rel="noreferrer">Rethinking AI Bubble</a></h3><p class="summary lang-block" data-lang="zh">社区讨论 AI bubble 是否会破裂，以及 OpenAI、Anthropic 等公司上市前市场叙事是否还会继续。AI 泡沫讨论本质上是在追问：收入、成本、资本和产品价值能否在同一时间线里对齐。</p><p class="summary lang-block" data-lang="en">For those worried about the AI Bubble bursting, it&#x27;s not happening, at least for now, not until atleast OpenAI and Anthropic are listed (later this year).</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkivsv" target="_blank" rel="noreferrer">C++ 创造者谈 memory safety</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkivsv" target="_blank" rel="noreferrer">Creator of C++ talks about memory safety</a></h3><p class="summary lang-block" data-lang="zh">讨论 C++ 创造者关于 memory safety 的观点。随着 Rust、C++ safety profiles 和安全监管推进，内存安全不再只是语言偏好，而是系统软件生态的治理问题。</p><p class="summary lang-block" data-lang="en">A discussion from r/programming, centered on current developer discussion and what developers are r…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tkh0w0" target="_blank" rel="noreferrer">16 bytes 代码把 Sierpinski waves 变成 Matrix rain</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tkh0w0" target="_blank" rel="noreferrer">16 bytes of code that turn Sierpinski waves into Matrix rain</a></h3><p class="summary lang-block" data-lang="zh">作者分享用 16 bytes x86 code 生成视觉效果背后的数学解释。很小、很 geek，但这种内容展示了底层编程、数学美感和代码艺术之间的连接。</p><p class="summary lang-block" data-lang="en">Hey babe, stop what you&#x27;re doing, HellMood dropped another WriteUp xD Jokes aside, this is an in depth explanation of the underlying math that allow <strong>16 bytes</strong> of <strong>x86 code</strong> to produce a visual t…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-22 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-22 · Source: Reddit</div></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tl0a68" target="_blank" rel="noreferrer">新｜Saturday Daily Thread：Python 资源请求与分享</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tl0a68" target="_blank" rel="noreferrer">Saturday Daily Thread: Resource Request and Sharing! Daily Thread</a></h3><p class="summary lang-block" data-lang="zh">周六资源分享帖，用户可以请求或分享 Python 学习和开发资源。社区日常帖很适合观察初学者和进阶开发者最近真正需要什么。</p><p class="summary lang-block" data-lang="en"># Weekly Thread: Resource Request and Sharing 📚 Stumbled upon a useful Python resource? Welcome to the Resource Request and Sharing thread! ## How it Works: 1. <strong>Request</strong>: Can&#x27;t find a r…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-23 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-23 · Source: Reddit</div></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://redd.it/1tl1a33" target="_blank" rel="noreferrer">新｜pynear 2.3 发布</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://redd.it/1tl1a33" target="_blank" rel="noreferrer">pynear 2.3 is out 🚀</a></h3><p class="summary lang-block" data-lang="zh">pynear 是一个快速 KNN library，主打在不牺牲 exact answers 的前提下提供生产速度，作者称在 binary descriptors 上可比 Faiss 快到 257 倍并保持 100% recall。向量检索和近邻搜索仍然在性能边界上不断卷。</p><p class="summary lang-block" data-lang="en">pynear is a fast KNN library that doesn&#x27;t make you choose between exact answers and production speed. Up to 257× faster than Faiss on binary descriptors at 100% recall. • cosine indices (exact +…</p><div class="source-date"><div class="lang-block" data-lang="zh">发布日期：2026-05-23 · 来源：Reddit</div><div class="lang-block" data-lang="en">Published: 2026-05-23 · Source: Reddit</div></div></article></div></section><section class="reader-section" id="github-trending"><h2 class="section-title lang-block" data-lang="zh">GitHub 热榜 (10)</h2><h2 class="section-title lang-block" data-lang="en">GitHub Trending (10)</h2><div class="section-items"><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/anthropics/claude-plugins-official" target="_blank" rel="noreferrer">anthropics/claude-plugins-official</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/anthropics/claude-plugins-official" target="_blank" rel="noreferrer">anthropics/claude-plugins-official</a></h3><p class="summary lang-block" data-lang="zh">claude-plugins-official 连续高热，今天新增 2,549 stars。Claude Code plugin 生态正在从个人扩展和零散脚本走向官方目录、可发现、可审查的阶段。对企业团队来说，这类目录的价值在于降低扩展风险，也让 agent 能力可以像依赖一样被管理。</p><p class="summary lang-block" data-lang="en">A curated directory of high-quality plugins for Claude Code. Official, Anthropic-managed directory…</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">25,204</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">2,777</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 2,549 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">25,204</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">2,777</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">2,549 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Python</span><span class="lang-inline" data-lang="en">Python</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/colbymchenry/codegraph" target="_blank" rel="noreferrer">colbymchenry/codegraph</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/colbymchenry/codegraph" target="_blank" rel="noreferrer">colbymchenry/codegraph</a></h3><p class="summary lang-block" data-lang="zh">codegraph 继续是今日热榜核心项目，新增 3,684 stars。它把代码库预索引成 knowledge graph，让 coding agent 在动手前更快理解 repo 结构，主打约 35% 成本下降、约 70% 工具调用减少。coding agent 的效率优化正在从“换更强模型”转向“提供更好的本地上下文层”。</p><p class="summary lang-block" data-lang="en"><strong>~35% cheaper · ~70% fewer tool calls · 100% local</strong></p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">16,893</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">936</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 3,684 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">16,893</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">936</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">3,684 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">TypeScript</span><span class="lang-inline" data-lang="en">TypeScript</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Frontend</span><span class="lang-inline" data-lang="en">Frontend</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI Agent</span><span class="lang-inline" data-lang="en">AI Agent</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/ruvnet/RuView" target="_blank" rel="noreferrer">ruvnet/RuView</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/ruvnet/RuView" target="_blank" rel="noreferrer">ruvnet/RuView</a></h3><p class="summary lang-block" data-lang="zh">RuView 用 commodity WiFi signals 做 spatial intelligence，可以检测人员、呼吸、心率、移动和房间状态，强调穿墙、暗光和无摄像头。这个方向很有想象力：它把环境感知从摄像头转向无线信号，也让隐私友好的 sensing system 变得更具体。</p><p class="summary lang-block" data-lang="en"><strong>Turn ordinary WiFi into a spatial intelligence / sensing system.</strong> Detect people, measure breathing and heart rate, track movement, and monitor rooms — through walls, in the dark, with no cameras o…</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">64,127</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">8,470</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 978 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">64,127</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">8,470</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">978 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Rust</span><span class="lang-inline" data-lang="en">Rust</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">DevOps</span><span class="lang-inline" data-lang="en">DevOps</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noreferrer">rohitg00/ai-engineering-from-scratch</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank" rel="noreferrer">rohitg00/ai-engineering-from-scratch</a></h3><p class="summary lang-block" data-lang="zh">ai-engineering-from-scratch 是一套 AI engineering 学习路线，包含 20 个阶段、435 节课，覆盖 Python、TypeScript、Rust 和 Julia。它持续上榜说明开发者对系统化 AI 工程学习的需求很强，尤其是从基础理论一路走到 agent、swarm 和生产化交付的完整路径。</p><p class="summary lang-block" data-lang="en">This curriculum is the spine. 20 phases, 435 lessons, four languages: Python, TypeScript, Rust, Julia.</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">12,144</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">2,295</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 988 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">12,144</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">2,295</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">988 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Python</span><span class="lang-inline" data-lang="en">Python</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI Agent</span><span class="lang-inline" data-lang="en">AI Agent</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank" rel="noreferrer">ChromeDevTools/chrome-devtools-mcp</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank" rel="noreferrer">ChromeDevTools/chrome-devtools-mcp</a></h3><p class="summary lang-block" data-lang="zh">chrome-devtools-mcp 让 Antigravity、Claude、Cursor、Copilot 等 coding agents 可以控制并检查实时 Chrome 浏览器。浏览器调试正在成为 agent toolchain 的标配能力：agent 不仅要改代码，也要能看页面、查 DOM、追网络请求和验证交互。</p><p class="summary lang-block" data-lang="en">Chrome DevTools for agents ( ) lets your coding agent (such as Antigravity, Claude, Cursor or Copilot) control and inspect a live Chrome browser.</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">41,041</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">2,609</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 501 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">41,041</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">2,609</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">501 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">TypeScript</span><span class="lang-inline" data-lang="en">TypeScript</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Frontend</span><span class="lang-inline" data-lang="en">Frontend</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI Agent</span><span class="lang-inline" data-lang="en">AI Agent</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/dotnet/skills" target="_blank" rel="noreferrer">dotnet/skills</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/dotnet/skills" target="_blank" rel="noreferrer">dotnet/skills</a></h3><p class="summary lang-block" data-lang="zh">dotnet/skills 收录 .NET 团队为 coding agents 准备的 core skills 和 custom agents。官方语言/框架团队开始直接提供 agent skills，说明未来 developer experience 会同时包含给人看的文档、给 IDE 的 tooling，以及给 agent 用的操作知识。</p><p class="summary lang-block" data-lang="en">This repository contains the .NET team&#x27;s curated set of core skills and custom agents for coding agents.</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">2,575</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">202</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 389 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">2,575</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">202</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">389 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">C#</span><span class="lang-inline" data-lang="en">C#</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI</span><span class="lang-inline" data-lang="en">AI</span></span><span class="tag"><span class="lang-inline" data-lang="zh">AI Agent</span><span class="lang-inline" data-lang="en">AI Agent</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/Lum1104/Understand-Anything" target="_blank" rel="noreferrer">Lum1104/Understand-Anything</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/Lum1104/Understand-Anything" target="_blank" rel="noreferrer">Lum1104/Understand-Anything</a></h3><p class="summary lang-block" data-lang="zh">Understand-Anything 的口号是 “Graphs that teach &gt; graphs that impress”。它关注的不是炫酷可视化，而是让开发者和 agent 能围绕代码库、文档和知识库持续提问与探索。知识图谱正在成为 agent context 和人类理解之间的共同界面。</p><p class="summary lang-block" data-lang="en">Turn any codebase, knowledge base, or docs into an interactive knowledge graph you can explore, search, and ask questions about.</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">18,951</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">1,718</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 1,393 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">18,951</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">1,718</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">1,393 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">TypeScript</span><span class="lang-inline" data-lang="en">TypeScript</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Frontend</span><span class="lang-inline" data-lang="en">Frontend</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/odoo/odoo" target="_blank" rel="noreferrer">odoo/odoo</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/odoo/odoo" target="_blank" rel="noreferrer">odoo/odoo</a></h3><p class="summary lang-block" data-lang="zh">Odoo 是成熟的开源 business apps 套件，覆盖 ERP、CRM、销售、库存等企业流程。它出现在热榜里提醒我们：除了 AI agent 新项目，长期维护的业务软件基础设施依然拥有庞大开发者和企业需求。</p><p class="summary lang-block" data-lang="en">Odoo is a suite of web based open source business apps.</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">51,185</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">32,517</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 79 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">51,185</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">32,517</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">79 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Python</span><span class="lang-inline" data-lang="en">Python</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span><span class="tag"><span class="lang-inline" data-lang="zh">Backend</span><span class="lang-inline" data-lang="en">Backend</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/byJoey/cfnew" target="_blank" rel="noreferrer">byJoey/cfnew</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/byJoey/cfnew" target="_blank" rel="noreferrer">byJoey/cfnew</a></h3><p class="summary lang-block" data-lang="zh">cfnew 看起来聚焦 Cloudflare Workers 与 KV 配置流程：创建 KV namespace、绑定环境变量、部署后通过图形化配置即时生效，不需要重新部署。它代表一类很实用的小工具：把 Cloudflare 边缘应用的配置和部署摩擦降下来。</p><p class="summary lang-block" data-lang="en">1. 在Workers中创建KV命名空间，绑定环境变量 2. 部署后访问 使用图形化配置 3. 改完配置立即生效，不用重新部署 87 stars today</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">13,335</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">6,487</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 87 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">13,335</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">6,487</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">87 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span></div></article><article class="reader-item"><h3 class="item-title lang-block" data-lang="zh"><a class="title-link" href="https://github.com/trimstray/the-book-of-secret-knowledge" target="_blank" rel="noreferrer">trimstray/the-book-of-secret-knowledge</a></h3><h3 class="item-title lang-block" data-lang="en"><a class="title-link" href="https://github.com/trimstray/the-book-of-secret-knowledge" target="_blank" rel="noreferrer">trimstray/the-book-of-secret-knowledge</a></h3><p class="summary lang-block" data-lang="zh">the-book-of-secret-knowledge 是一个长期热门的工程知识合集，覆盖命令行、系统、安全、Web、网络和各种实用工具。它能持续吸引 stars，说明开发者仍然需要高密度、可检索、可收藏的“工程生存手册”。</p><p class="summary lang-block" data-lang="en">&quot; Knowledge is powerful, be careful how you use it! A collection of inspiring lists, manuals, cheat…</p><div class="github-meta"><div class="github-stats" data-lang="zh"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">223,284</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">13,389</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">今日新增 969 stars</span></span></div><div class="github-stats" data-lang="en"><span class="github-stat"><span class="github-stat-icon">★</span><span class="github-stat-text">223,284</span></span><span class="github-stat"><span class="github-stat-icon">⑂</span><span class="github-stat-text">13,389</span></span><span class="github-stat"><span class="github-stat-icon">🔥</span><span class="github-stat-text">969 stars today</span></span></div></div><div class="tags"><span class="tag"><span class="lang-inline" data-lang="zh">Open Source</span><span class="lang-inline" data-lang="en">Open Source</span></span></div></article></div></section>
+  </main>
+  <script>
+    (() => {
+      const root = document.querySelector('.page');
+      const buttons = Array.from(document.querySelectorAll('.lang-toggle'));
+      if (window.self !== window.top) {
+        root?.classList.add('is-embedded');
+      }
+      const setLanguage = (lang) => {
+        const nextLang = lang === 'en' ? 'en' : 'zh';
+        root?.setAttribute('data-language', nextLang);
+        buttons.forEach((button) => {
+          button.classList.toggle('is-active', button.getAttribute('data-target-lang') === nextLang);
+        });
+        try {
+          window.localStorage.setItem('wsd-lang', nextLang);
+        } catch (_error) {
+        }
+      };
+      const savedLang = (() => {
+        try {
+          return window.localStorage.getItem('wsd-lang');
+        } catch (_error) {
+          return null;
+        }
+      })();
+      setLanguage(savedLang || 'zh');
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => setLanguage(button.getAttribute('data-target-lang') || 'zh'));
+      });
+      window.addEventListener('message', (event) => {
+        if (!event.data || event.data.type !== 'wsd-set-language') {
+          return;
+        }
+        setLanguage(event.data.language);
+      });
+    })();
+  </script>
+</body>
+</html>
